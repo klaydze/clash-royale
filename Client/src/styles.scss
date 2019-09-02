@@ -1,0 +1,179 @@
+/* You can add global styles to this file, and also import other style files */
+@import "../node_modules/bootstrap/scss/bootstrap.scss";
+// @import '../src/assets/styles/theme.scss'
+
+/* MY CUSTOM CSS */
+.parallax {
+  background-attachment: fixed;
+  background-size: cover;
+  height: 100%;
+  padding: 120px 0;
+  position: relative;
+  width: 100%;
+}
+
+.parallax.parallax-off {
+  background-attachment: scroll !important;
+  display: block;
+  height: 100%;
+  min-height: 100%;
+  overflow: hidden;
+  position: relative;
+  background-position: center center;
+  vertical-align: sub;
+  width: 100%;
+  z-index: 2;
+}
+
+.section {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  padding: 120px 0;
+}
+
+.section-title {
+  display: block;
+  position: relative;
+  margin-bottom: 60px;
+}
+
+.section-title p {
+  color: #999;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 33px;
+  margin: 0;
+}
+
+.section-title h3 {
+  font-size: 42px;
+  font-weight: 500;
+  line-height: 62px;
+  margin: 0 0 25px;
+  padding: 0;
+  text-transform: none;
+}
+
+// section white background
+.section.wb {
+  background-color: #ffffff;
+}
+
+// section light background
+.section.lb {
+  background-color: #f2f3f5;
+}
+
+// section dark background
+.section.db {
+  background-color: #1f1f1f;
+}
+
+.section.db h3 {
+  color: #ffffff;
+}
+
+hr.hr1 {
+  position: relative;
+  margin: 60px 0;
+  border: 1px dashed #f2f3f5;
+}
+
+hr.hr2 {
+  position: relative;
+  margin: 17px 0;
+  border: 1px dashed #f2f3f5;
+}
+
+hr.hr3 {
+  position: relative;
+  margin: 25px 0 30px 0;
+  border: 1px dashed #f2f3f5;
+}
+
+hr.invis {
+  border-color: transparent;
+}
+
+hr.invis1 {
+  margin: 10px 0;
+  border-color: transparent;
+}
+
+.header_style_01 {
+  background-color: rgba(255, 255, 255, 0);
+  display: block;
+  left: 0;
+  padding: 20px 40px !important;
+  position: relative;
+  right: 0;
+  top: 0;
+  width: 100%;
+  -webkit-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.3);
+  z-index: 111;
+}
+
+.header_style_01 .navbar-default {
+  background-color: transparent;
+  border: 0;
+  border-radius: 0px;
+}
+
+.header_style_01 .navbar,
+.header_style_01 .navbar-nav,
+.header_style_01 .navbar-default,
+.header_style_01 .nav {
+  margin-bottom: 0 !important;
+}
+
+.header_style_01 .navbar-brand {
+  padding: 2px 15px 0 15px;
+  height: auto;
+}
+
+.header_style_01 .navbar-default .navbar-nav > li > a {
+  border-radius: 0;
+  color: #ffffff;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 600;
+  text-transform: capitalize;
+  background-color: transparent;
+}
+
+.header_style_01 .navbar-default .navbar-nav > li a {
+  color: #333333;
+  padding: 15px 15px;
+}
+
+.header_style_01 .navbar-default .navbar-nav > li a.active {
+  color: #ffffff;
+  box-shadow: 0 10px 20px 0 rgba(5, 16, 44, 0.15);
+  border-radius: 25px 0px 25px 0px;
+  background: #fd6802;
+}
+
+.header_style_01 .navbar-default .navbar-nav > li:hover a,
+.header_style_01 .navbar-default .navbar-nav > li:focus a {
+  color: #ffffff;
+  box-shadow: 0 10px 20px 0 rgba(5, 16, 44, 0.15);
+  border-radius: 25px 0px 25px 0px;
+  background: #fd6802;
+}
+
+.header_style_01 .navbar-right > li {
+  margin-top: 2px;
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  -ms-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+
+.header_style_01 .navbar-right > li > a {
+  padding-bottom: 10px;
+  padding-top: 10px;
+}

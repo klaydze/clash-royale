@@ -1,0 +1,62 @@
+{
+  "$schema": "./node_modules/@angular/service-worker/config/schema.json",
+  "index": "/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "resources": {
+        "files": [
+          "/favicon.ico",
+          "/index.html",
+          "/*.css",
+          "/*.js"
+        ]
+      }
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": [
+          "/assets/**",
+          "/*.(eot|svg|cur|jpg|png|webp|gif|otf|ttf|woff|woff2|ani)"
+        ]
+      }
+    }
+  ],
+  "dataGroups": [
+    {
+      "name": "api",
+      "urls": [
+        "https://clashapi.now.sh/api/cards",
+        "https://clashapi.now.sh/api/chests",
+        "https://clashapi.now.sh/api/arenas",
+        "https://clashapi.now.sh/api/leagues"
+      ],
+      "cacheConfig": {
+        "maxSize": 100,
+        "maxAge": "3d",
+        "timeout": "1m",
+        "strategy": "freshness"
+      }
+    },
+    {
+      "name": "images",
+      "urls": [
+        "https://clashapi.now.sh/images/cards/*",
+        "https://clashapi.now.sh/images/chests/*",
+        "https://clashapi.now.sh/images/arenas/*",
+        "https://clashapi.now.sh/images/leagues/*",
+        "https://clashapi.now.sh/api/**"
+      ],
+      "cacheConfig": {
+        "maxSize": 100,
+        "maxAge": "3d",
+        "timeout": "1m",
+        "strategy": "performance"
+      }
+    }
+  ]
+}

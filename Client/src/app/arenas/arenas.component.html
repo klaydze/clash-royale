@@ -1,0 +1,22 @@
+<div class="container mt-5">
+  <div class="card">
+    <div class="card-body">
+      <h1 class="card-title">
+        {{pageTitle}}
+      </h1>
+      <hr>
+      <div class="row">
+        <div class="col-md-3 col-sm-4 col-xs-12 mb-4" *ngFor='let arena of filteredArenas'>
+          <div class="text-center hovereffect">
+            <img class="card-img-top" [src]='arena.imageUrl' [title]='arena.name' [alt]='arena.name' width="120px"
+              height="200px" />
+            <div class="overlay">
+              <h2>{{arena.name}}</h2>
+              <a class="info" [routerLink]="['/arenas', arena.id]">Show details</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

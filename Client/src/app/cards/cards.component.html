@@ -1,0 +1,105 @@
+<div class="container mt-5">
+  <div class="card">
+    <div class="card-body">
+      <h1 class="card-title">
+        {{pageTitle}}
+      </h1>
+      <div class="card-title mb-5">
+        <form class="form-inline">
+          <strong class="mr-sm-2">Search by rarity:</strong>
+          <select class="form-control my-2 mr-sm-2" (change)='onRarityChange($event.target.value)'>
+            <option value="all">All</option>
+            <option value="common">Common</option>
+            <option value="rare">Rare</option>
+            <option value="epic">Epic</option>
+            <option value="legendary">Legendary</option>
+          </select>
+          <input name="filterKeyword" [(ngModel)]='filterKeyword' class="form-control mr-sm-2" type="search"
+            placeholder="Type card name or type here..." aria-label="Search">
+        </form>
+      </div>
+
+      <div class="container mb-5">
+        <h3 class="text-primary">Troops <span class="badge badge-danger">{{filteredCardsDetail.troops.length}}</span>
+        </h3>
+        <hr>
+        <div class="row no-gutters">
+          <div class="col-md-1 col-4 hover-effect" *ngFor='let troop of filteredCardsDetail.troops'>
+            <a class="d-block mb-1">
+              <figure>
+                  <img class="img-fluid img-thumbnail" [src]='troop.imageUrl' [title]='troop.name' [alt]='troop.name'
+                  (click)='open(troop.id)' />
+              </figure>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="container mb-5">
+        <h3 class="text-primary">Spells <span class="badge badge-danger">{{filteredCardsDetail.spells.length}}</span>
+        </h3>
+        <hr>
+        <div class="row no-gutters">
+          <div class="col-md-1 col-4 hover-effect" *ngFor='let spell of filteredCardsDetail.spells'>
+            <a class="d-block mb-1">
+              <figure>
+                <img class="img-fluid img-thumbnail" [src]='spell.imageUrl' [title]='spell.name' [alt]='spell.name'
+                  (click)='open(spell.id)' />
+              </figure>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        <h3 class="text-primary">Buildings <span
+            class="badge badge-danger">{{filteredCardsDetail.buildings.length}}</span></h3>
+        <hr>
+        <div class="row no-gutters">
+          <div class="col-md-1 col-4 hover-effect" *ngFor='let building of filteredCardsDetail.buildings'>
+            <a class="d-block mb-1">
+              <figure>
+                <img class="img-fluid img-thumbnail" [src]='building.imageUrl' [title]='building.name'
+                  [alt]='building.name' (click)='open(building.id)' />
+              </figure>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- <div class="table-responsive-sm table-hover">
+        <table class="table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Name</th>
+              <th>Rarity</th>
+              <th>Type</th>
+              <th>Elixir Cost</th>
+              <th>Arena</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor='let card of filteredCards | paginate: { itemsPerPage: 10, 
+                                                                        currentPage: page, 
+                                                                        totalItems: totalRecordCount }'>
+              <td>
+                <img class="img-fluid" [src]='card.imageUrl' [alt]='card.name' [title]='card.name' height="42"
+                  width="42" />
+              </td>
+              <td><button type="button" class="btn btn-link" (click)='open(card._id)'>{{card.name}}</button></td>
+              <td>{{card.rarity}}</td>
+              <td>{{card.type}}</td>
+              <td>{{card.elixirCost}}</td>
+              <td>{{card.arena}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div> -->
+      <!-- <div>
+        <pagination-controls maxSize="10" directionLinks="true" (pageChange)="page = $event">
+        </pagination-controls>
+      </div> -->
+    </div>
+  </div>
+</div>

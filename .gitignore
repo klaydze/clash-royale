@@ -1,0 +1,11 @@
+node_modules/
+dist/
+ClashRoyaleApi/ClashRoyaleApi/bin
+ClashRoyaleApi/ClashRoyaleApi/obj
+ClashRoyaleApi/ClashRoyaleApi/Properties
+ClashRoyaleApi/ClashRoyaleApi.Core/bin
+ClashRoyaleApi/ClashRoyaleApi.Core/obj
+ClashRoyaleApi/ClashRoyaleApi.Infrastructure/bin
+ClashRoyaleApi/ClashRoyaleApi.Infrastructure/obj
+appsettings.Production.json
+.vs/
