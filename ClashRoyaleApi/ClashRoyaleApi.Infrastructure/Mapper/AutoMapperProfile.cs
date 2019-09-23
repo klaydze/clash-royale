@@ -1,10 +1,6 @@
 ﻿using AutoMapper;
 using ClashRoyaleApi.Core.Entities;
-using ClashRoyaleApi.Infrastructure.Extensions;
 using ClashRoyaleApi.Infrastructure.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ClashRoyaleApi.Infrastructure.Mapper
 {
@@ -14,13 +10,13 @@ namespace ClashRoyaleApi.Infrastructure.Mapper
         {
             CreateMap<ArenaEntity, Arena>();
             CreateMap<ChestEntity, Chest>();
+            CreateMap<CardStatisticsEntity, CardStatistics>();
             CreateMap<CardEntity, Card>()
-                // .ForMember(dest => dest.Arena, opt => opt.MapFrom(src => src.Arena));
-            // .ForMember(dest => dest.Arena, opt => opt.MapFrom(src => src.Arena))
-            //.ForMember(dest => dest.Arena, opt => opt.PreCondition(src => src.Arena != null))
             //.ForMember(dest => dest.Arena, opt => opt.MapFrom(src => src.Arena));
             //.ForAllOtherMembers(opt => opt.IgnoreSourceWhenDefault());
-            .ForMember(dest => dest.Arena, opt => opt.Ignore());
+            .ForMember(dest => dest.CardStatistics, opt => opt.MapFrom(src => src.CardStatistics))
+            .ForMember(dest => dest.Arena, opt => opt.MapFrom(src => src.Arena));
+            //.ForMember(dest => dest.Arena, opt => opt.Ignore());
         }
     }
 }

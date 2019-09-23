@@ -16,6 +16,7 @@ namespace ClashRoyaleApi.Infrastructure.Repository
         private IRepositoryBase<LeagueEntity> _leagueRepository;
         private IRepositoryBase<CardsUnlockPerArenaEntity> _cardsUnlockPerArenaRepository;
         private IRepositoryBase<ChestsUnlockPerArenaEntity> _chestsUnlockPerArenaRepository;
+        private IRepositoryBase<CardStatisticsEntity> _cardStatistics;
 
         public RepositoryWrapper(ClashRoyaleContext context)
         {
@@ -39,6 +40,9 @@ namespace ClashRoyaleApi.Infrastructure.Repository
 
         public IRepositoryBase<ChestsUnlockPerArenaEntity> ChestsUnlockPerArena
             => _chestsUnlockPerArenaRepository ?? new RepositoryBase<ChestsUnlockPerArenaEntity>(_context);
+
+        public IRepositoryBase<CardStatisticsEntity> CardStatistics
+            => _cardStatistics ?? new RepositoryBase<CardStatisticsEntity>(_context);
 
         public async Task SaveAsync()
             => await _context.SaveChangesAsync();

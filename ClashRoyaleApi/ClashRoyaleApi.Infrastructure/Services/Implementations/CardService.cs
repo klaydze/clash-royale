@@ -7,7 +7,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace ClashRoyaleApi.Infrastructure.Services.Implementations
 {
@@ -75,7 +74,7 @@ namespace ClashRoyaleApi.Infrastructure.Services.Implementations
         public async Task<PagedResults<Card>> GetCardsAsync(SortOptions<Card, CardEntity> sortOptions,
             SearchOptions<Card, CardEntity> searchOptions)
         {
-            var query = _repositoryWrapper.Card.GetAll();
+            var query = _repositoryWrapper.Card.GetAll(x => x.CardStatistics);
 
             query = searchOptions.Apply(query);
             query = sortOptions.Apply(query);
@@ -94,7 +93,8 @@ namespace ClashRoyaleApi.Infrastructure.Services.Implementations
 
         public async Task<Card> GetCardByIdAsync(int id)
         {
-            var cardEntity = await _repositoryWrapper.Card.GetByIdAsync(id);
+            var cardEntity = await _repositoryWrapper.Card.GetByIdAsync(id, cs => cs.CardStatistics,
+                                                                                        a => a.Arena);
 
             if (cardEntity == null)
                 return null;

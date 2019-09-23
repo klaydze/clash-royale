@@ -1,24 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
-using ClashRoyaleApi.Core.Contracts;
+﻿using AutoMapper;
 using ClashRoyaleApi.Infrastructure;
 using ClashRoyaleApi.Infrastructure.Extensions;
 using ClashRoyaleApi.Infrastructure.Filters;
 using ClashRoyaleApi.Infrastructure.Mapper;
 using ClashRoyaleApi.Infrastructure.Models;
-using ClashRoyaleApi.Infrastructure.Repository;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+using System.Security.Claims;
 
 namespace ClashRoyaleApi
 {
@@ -48,9 +41,47 @@ namespace ClashRoyaleApi
 
             services.ConfigureRepositoryWrapper();
             services.ConfigureAppServices();
-            
+
             services.AddRouting(options =>
                 options.LowercaseUrls = true);
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    policy => policy.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials());
+            });
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.Authority = "https://localhost:5003/";
+                    options.Audience = "clashroyale-api";
+                });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("ReadOnlyPolicy", policy =>
+                {
+                    policy.RequireAuthenticatedUser()
+                        .RequireClaim("scope", "cr_api.read_only");
+                });
+
+                options.AddPolicy("ReadWritePolicy", policy =>
+                {
+                    policy.RequireAuthenticatedUser()
+                        .RequireClaim(ClaimTypes.Role, "user_read_write");
+                });
+
+                options.AddPolicy("AdminPolicy", policy =>
+                {
+                    policy.RequireAuthenticatedUser()
+                        .RequireClaim("scope", "cr_api.admin")
+                        .RequireClaim(ClaimTypes.Role, "user_admin");
+                });
+            });
 
             services
                 .AddMvc(options =>
@@ -67,15 +98,6 @@ namespace ClashRoyaleApi
                     var errorResponse = new ApiError(context.ModelState);
                     return new BadRequestObjectResult(errorResponse);
                 };
-            });
-
-            services.AddCors(options =>
-            {
-                options.AddPolicy("CorsPolicy",
-                    policy => policy.AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader()
-                        .AllowCredentials());
             });
         }
 
@@ -94,6 +116,7 @@ namespace ClashRoyaleApi
 
             app.UseCors("CorsPolicy");
             app.UseHttpsRedirection();
+            app.UseAuthentication();
             app.UseMvc();
         }
     }

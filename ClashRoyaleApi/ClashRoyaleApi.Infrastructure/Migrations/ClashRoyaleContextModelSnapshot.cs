@@ -52,22 +52,46 @@ namespace ClashRoyaleApi.Infrastructure.Migrations
 
                     b.Property<int?>("ArenaId");
 
+                    b.Property<int>("Count");
+
+                    b.Property<string>("DashRange")
+                        .HasMaxLength(20);
+
+                    b.Property<float>("DeployTime");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(500);
 
                     b.Property<int>("ElixirCost");
 
+                    b.Property<float>("HitSpeed");
+
                     b.Property<string>("IdName")
                         .IsRequired()
                         .HasMaxLength(30);
+
+                    b.Property<int>("Lifetime");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(30);
 
+                    b.Property<int>("ProjectileRange");
+
+                    b.Property<float>("Radius");
+
+                    b.Property<string>("Range")
+                        .HasMaxLength(20);
+
                     b.Property<string>("Rarity")
                         .IsRequired()
+                        .HasMaxLength(20);
+
+                    b.Property<string>("Speed")
+                        .HasMaxLength(20);
+
+                    b.Property<string>("Targets")
                         .HasMaxLength(20);
 
                     b.Property<string>("Type")
@@ -81,6 +105,76 @@ namespace ClashRoyaleApi.Infrastructure.Migrations
                     b.HasIndex("ArenaId");
 
                     b.ToTable("Cards");
+                });
+
+            modelBuilder.Entity("ClashRoyaleApi.Core.Entities.CardSecondarySkillsEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("CardId");
+
+                    b.Property<int>("Count");
+
+                    b.Property<float>("HitSpeed");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(30);
+
+                    b.Property<string>("Range")
+                        .HasMaxLength(30);
+
+                    b.Property<float>("SpawnSpeed");
+
+                    b.Property<string>("Speed")
+                        .HasMaxLength(30);
+
+                    b.Property<string>("Targets")
+                        .HasMaxLength(20);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CardId");
+
+                    b.ToTable("CardSecondarySkills");
+                });
+
+            modelBuilder.Entity("ClashRoyaleApi.Core.Entities.CardStatisticsEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AreaDamage");
+
+                    b.Property<int?>("CardId");
+
+                    b.Property<int>("CardLevel");
+
+                    b.Property<int>("ChargeDamage");
+
+                    b.Property<int>("CrownTowerDamage");
+
+                    b.Property<int>("Damage");
+
+                    b.Property<int>("DamagePerSecond");
+
+                    b.Property<int>("DashDamage");
+
+                    b.Property<float>("Duration");
+
+                    b.Property<int>("HealingPerSecond");
+
+                    b.Property<int>("HitPoints");
+
+                    b.Property<int>("ShieldHitpoints");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CardId");
+
+                    b.ToTable("CardStatistics");
                 });
 
             modelBuilder.Entity("ClashRoyaleApi.Core.Entities.CardsUnlockPerArenaEntity", b =>
@@ -156,11 +250,50 @@ namespace ClashRoyaleApi.Infrastructure.Migrations
                     b.ToTable("ChestsUnlockPerArena");
                 });
 
+            modelBuilder.Entity("ClashRoyaleApi.Core.Entities.LeagueEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("IdName")
+                        .IsRequired()
+                        .HasMaxLength(30);
+
+                    b.Property<int>("MinimumTrophies");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(30);
+
+                    b.Property<int>("Version");
+
+                    b.Property<int>("VictoryGold");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Leagues");
+                });
+
             modelBuilder.Entity("ClashRoyaleApi.Core.Entities.CardEntity", b =>
                 {
                     b.HasOne("ClashRoyaleApi.Core.Entities.ArenaEntity", "Arena")
                         .WithMany()
                         .HasForeignKey("ArenaId");
+                });
+
+            modelBuilder.Entity("ClashRoyaleApi.Core.Entities.CardSecondarySkillsEntity", b =>
+                {
+                    b.HasOne("ClashRoyaleApi.Core.Entities.CardEntity", "Card")
+                        .WithMany()
+                        .HasForeignKey("CardId");
+                });
+
+            modelBuilder.Entity("ClashRoyaleApi.Core.Entities.CardStatisticsEntity", b =>
+                {
+                    b.HasOne("ClashRoyaleApi.Core.Entities.CardEntity", "Card")
+                        .WithMany()
+                        .HasForeignKey("CardId");
                 });
 #pragma warning restore 612, 618
         }

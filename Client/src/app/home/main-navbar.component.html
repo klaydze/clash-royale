@@ -12,10 +12,16 @@
 
   <div [ngbCollapse]="isHomeNavbarCollapsed" class="navbar-collapse collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
+        <li *ngIf="isLoggedIn()" class="nav-item active">
+            <a class="nav-link" [routerLink]="['/secured/dashboard']">Dashboard <span class="sr-only">(current)</span></a>
+          </li>
     </ul>
     <div class="navbar-nav">
       <a class="nav-link" [routerLink]="['/cards']">Cards</a>
       <a class="nav-link" [routerLink]="['/arenas']">Arenas</a>
+
+      <a *ngIf="!isLoggedIn()" class="nav-link" (click)='login()'>Login</a>
+      <a *ngIf="isLoggedIn()" class="nav-link" (click)='logout()'>Logout</a>
     </div>
   </div>
 </nav>

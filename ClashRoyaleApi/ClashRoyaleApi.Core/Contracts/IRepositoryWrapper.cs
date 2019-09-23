@@ -13,6 +13,7 @@ namespace ClashRoyaleApi.Core.Contracts
         IRepositoryBase<LeagueEntity> League { get; }
         IRepositoryBase<CardsUnlockPerArenaEntity> CardsUnlockPerArena { get; }
         IRepositoryBase<ChestsUnlockPerArenaEntity> ChestsUnlockPerArena { get; }
+        IRepositoryBase<CardStatisticsEntity> CardStatistics { get; }
 
         Task SaveAsync();
     }

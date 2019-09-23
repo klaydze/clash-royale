@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace ClashRoyaleApi.Core.Entities
 {
@@ -30,11 +30,34 @@ namespace ClashRoyaleApi.Core.Entities
 
         public int ElixirCost { get; set; }
 
-        //[ForeignKey("Id")]
-        //public int ArenaId { get; set; }
+        [StringLength(20)]
+        public string Targets { get; set; }
+
+        public float HitSpeed { get; set; }
+
+        public int Count { get; set; }
+
+        [StringLength(20)]
+        public string Range { get; set; }
+
+        [StringLength(20)]
+        public string Speed { get; set; }
+
+        public float Radius { get; set; }
+
+        public float DeployTime { get; set; }
+        
+        public int Lifetime { get; set; }
+
+        [StringLength(20)]
+        public string DashRange { get; set; }
+
+        public int ProjectileRange { get; set; }
 
         public int Version { get; set; }
 
         public virtual ArenaEntity Arena { get; set; }
+
+        public virtual ICollection<CardStatisticsEntity> CardStatistics { get; set; }
     }
 }

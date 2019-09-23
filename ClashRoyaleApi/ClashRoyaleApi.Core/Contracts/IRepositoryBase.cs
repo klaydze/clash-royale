@@ -16,7 +16,7 @@ namespace ClashRoyaleApi.Core.Contracts
         Task SaveAsyc(); */
 
         Task CreateAsync(TEntity entity);
-        Task<TEntity> GetByIdAsync(int id);
+        Task<TEntity> GetByIdAsync(int id, params Expression<Func<TEntity, object>>[] includes);
         // Task<IEnumerable<TEntity>> GetAllAsync();
         IQueryable<TEntity> GetAll(params Expression<Func<TEntity, object>>[] includes);
         void Update(TEntity entity);

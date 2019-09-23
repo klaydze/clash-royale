@@ -12,7 +12,8 @@ export class CardResolver implements Resolve<Card[]> {
 
     constructor(private cardService: CardService) { }
 
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Card[] | Observable<Card[]> | Promise<Card[]> {
+    resolve(route: ActivatedRouteSnapshot, 
+        state: RouterStateSnapshot): Card[] | Observable<Card[]> | Promise<Card[]> {
         return this.cardService.getCards();
     }
 

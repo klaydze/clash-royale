@@ -1,0 +1,184 @@
+<div class="container">
+    <div class="card-wrapper">
+        <div class="card-wrapper-inner">
+            <div class="card-header-main card-header-name-main">
+                {{selectedCard?.name}}
+            </div>
+            <img class='img img-header' [src]='selectedCard?.imageUrl' [title]='selectedCard?.name' />
+            <div class="card-basic-info">
+                <div class="card-description">
+                    {{selectedCard?.description}}
+                </div>
+
+                <div class="card-stat">
+                    <div class="card-stat-header">{{selectedCard?.name}}</div>
+                    <div class="card-stat-content">
+                        <div>Rarity</div>
+                        <div class="card-stat-dots"></div>
+                        <div class="card-stat-value">{{selectedCard?.rarity}}</div>
+                    </div>
+                    <div class="card-stat-content">
+                        <div>Type</div>
+                        <div class="card-stat-dots"></div>
+                        <div class="card-stat-value">{{selectedCard?.type}}</div>
+                    </div>
+                    <div class="card-stat-content" *ngIf="selectedCard?.elixirCost != '0'">
+                        <div>Elixir Cost</div>
+                        <div class="card-stat-dots"></div>
+                        <div class="card-stat-value">{{selectedCard?.elixirCost}}</div>
+                    </div>
+                    <div class="card-stat-content" *ngIf="selectedCard?.count != '0'">
+                        <div>Count</div>
+                        <div class="card-stat-dots"></div>
+                        <div class="card-stat-value">{{selectedCard?.count}}</div>
+                    </div>
+                    <div class="card-stat-content"
+                        *ngIf="selectedCard?.dashRange != null && selectedCard?.dashRange != ''">
+                        <div>Dash Range</div>
+                        <div class="card-stat-dots"></div>
+                        <div class="card-stat-value">{{selectedCard?.dashRange}}</div>
+                    </div>
+                    <div class="card-stat-content" *ngIf="selectedCard?.deployTime != '0'">
+                        <div>Deploy Time</div>
+                        <div class="card-stat-dots"></div>
+                        <div class="card-stat-value">{{selectedCard?.deployTime}}</div>
+                    </div>
+                    <div class="card-stat-content" *ngIf="selectedCard?.hitSpeed != '0'">
+                        <div>Hit Speed</div>
+                        <div class="card-stat-dots"></div>
+                        <div class="card-stat-value">{{selectedCard?.hitSpeed}}</div>
+                    </div>
+                    <div class="card-stat-content" *ngIf="selectedCard?.lifetime != '0'">
+                        <div>Lifetime</div>
+                        <div class="card-stat-dots"></div>
+                        <div class="card-stat-value">{{selectedCard?.lifetime}}</div>
+                    </div>
+                    <div class="card-stat-content" *ngIf="selectedCard?.projectileRange != '0'">
+                        <div>Projectile Range</div>
+                        <div class="card-stat-dots"></div>
+                        <div class="card-stat-value">{{selectedCard?.projectileRange}}</div>
+                    </div>
+                    <div class="card-stat-content" *ngIf="selectedCard?.radius != '0'">
+                        <div>Radius</div>
+                        <div class="card-stat-dots"></div>
+                        <div class="card-stat-value">{{selectedCard?.radius}}</div>
+                    </div>
+                    <div class="card-stat-content" *ngIf="selectedCard?.range != null && selectedCard?.range != ''">
+                        <div>Range</div>
+                        <div class="card-stat-dots"></div>
+                        <div class="card-stat-value">{{selectedCard?.range}}</div>
+                    </div>
+                    <div class="card-stat-content" *ngIf="selectedCard?.speed != null &&selectedCard?.speed != ''">
+                        <div>Speed</div>
+                        <div class="card-stat-dots"></div>
+                        <div class="card-stat-value">{{selectedCard?.speed}}</div>
+                    </div>
+                    <div class="card-stat-content" *ngIf="selectedCard?.targets != null && selectedCard?.targets != ''">
+                        <div>Targets</div>
+                        <div class="card-stat-dots"></div>
+                        <div class="card-stat-value">{{selectedCard?.targets}}</div>
+                    </div>
+                </div>
+
+                <div class="card-stat">
+                    <div class="card-header-sub card-header-name-sub">Statistics</div>
+                    <div class="card-stat-content ">
+                        <div class="card-stat-per-level">
+                            <div class="table-responsive-sm">
+                                <table class="table table-sm">
+                                    <tr>
+                                        <td><img height="32" width="32" src="../../assets/images/level-small.png"
+                                                title="Card Level">
+                                            <span class="stat-text"> Card Level</span>
+                                        </td>
+                                        <td *ngFor="let stat of selectedCard.cardStatistics">
+                                            <span>
+                                                {{stat.cardLevel}}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><img height="32" width="32" src="../../assets/images/hitpoints.png"
+                                                title="Hit Points">
+                                            <span class="stat-text"> Hitpoints</span>
+                                        </td>
+                                        <td *ngFor="let stat of selectedCard.cardStatistics">{{stat.hitPoints}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><img height="32" width="32" src="../../assets/images/damage.png"
+                                                title="Damage">
+                                            <span class="stat-text"> Damage</span>
+                                        </td>
+                                        <td *ngFor="let stat of selectedCard.cardStatistics">{{stat.damage}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><img height="32" width="32" src="../../assets/images/dps.png"
+                                                title="Damage/sec">
+                                            <span class="stat-text"> Damage/sec</span>
+                                        </td>
+                                        <td *ngFor="let stat of selectedCard.cardStatistics">{{stat.damagePerSecond}}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><img height="32" width="32" src="../../assets/images/charge-dash-damage.png"
+                                                title="Dash Damage">
+                                            <span class="stat-text"> Dash Damage</span>
+                                        </td>
+                                        <td *ngFor="let stat of selectedCard.cardStatistics">
+                                            <span>{{stat.dashDamage}}</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><img height="32" width="32" src="../../assets/images/area-damage.png"
+                                                title="Area Damage">
+                                            <span class="stat-text"> Area Damage</span>
+                                        </td>
+                                        <td *ngFor="let stat of selectedCard.cardStatistics">{{stat.areaDamage}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><img height="32" width="32" src="../../assets/images/crown-tower-damage.png"
+                                                title="Crown Tower Damage">
+                                            <span class="stat-text"> Crown Tower Damage</span>
+                                        </td>
+                                        <td *ngFor="let stat of selectedCard.cardStatistics">{{stat.crownTowerDamage}}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><img height="32" width="32" src="../../assets/images/charge-dash-damage.png"
+                                                title="Charge Damage">
+                                            <span class="stat-text"> Charge Damage</span>
+                                        </td>
+                                        <td *ngFor="let stat of selectedCard.cardStatistics">{{stat.chargeDamage}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><img height="32" width="32" src="../../assets/images/shield-hitpoints.png"
+                                                title="Shield Hitpoints">
+                                            <span class="stat-text"> Shield Hitpoints</span>
+                                        </td>
+                                        <td *ngFor="let stat of selectedCard.cardStatistics">{{stat.shieldHitpoints}}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><img height="32" width="32" src="../../assets/images/duration-lifetime.png"
+                                                title="Duration">
+                                            <span class="stat-text"> Duration</span>
+                                        </td>
+                                        <td *ngFor="let stat of selectedCard.cardStatistics">{{stat.duration}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><img height="32" width="32" src="../../assets/images/healing.png"
+                                                title="Healing/sec">
+                                            <span class="stat-text"> Healing/sec</span>
+                                        </td>
+                                        <td *ngFor="let stat of selectedCard.cardStatistics">{{stat.healingPerSecond}}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

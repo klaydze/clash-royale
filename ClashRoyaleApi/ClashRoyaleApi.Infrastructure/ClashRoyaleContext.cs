@@ -20,5 +20,7 @@ namespace ClashRoyaleApi.Infrastructure
         public DbSet<LeagueEntity> Leagues { get; set; }
         public DbSet<CardsUnlockPerArenaEntity> CardsUnlockPerArena { get; set; }
         public DbSet<ChestsUnlockPerArenaEntity> ChestsUnlockPerArena { get; set; }
+        public DbSet<CardSecondarySkillsEntity> CardSecondarySkills { get; set; }
+        public DbSet<CardStatisticsEntity> CardStatistics { get; set; }
     }
 }

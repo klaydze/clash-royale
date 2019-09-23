@@ -1,33 +1,33 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
-// import { CardsModule } from './cards/cards.module';
 import { AppRoutingModule } from './app-routing.module';
-// import { ArenasModule } from './arenas/arenas.module';
-// import { CardModalContentComponent } from './cards/cards.component';
+
 import { MainNavbarComponent } from './home/main-navbar.component';
 import { ChestsModule } from './chests/chests.module';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { HomeComponent } from './home/home/home.component';
+import { CoreModule } from './core/core.module';
+import { UnauthorizedComponent } from './shared/unauthorized/unauthorized.component';
+import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
     AppComponent,
     MainNavbarComponent,
-    HomeComponent
+    HomeComponent,
+    UnauthorizedComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
-    // CardsModule,
-    // ArenasModule,
     ChestsModule,
+    CoreModule,
     AppRoutingModule,
-    NgbModule,
+    NgbCollapseModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   // entryComponents: [CardModalContentComponent],

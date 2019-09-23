@@ -1,0 +1,231 @@
+<div class="container mt-5">
+    <ngb-tabset class="nav-fill nav-pills">
+        <ngb-tab title="Cards">
+            <ng-template ngbTabContent>
+                <div class="product-detail-card">
+                    <div class="col-sm-12 product-detail-card-title">
+                        <h3>Create New Card</h3>
+                        <hr />
+                    </div>
+                    <div class="product-detail-card-container">
+                        <!-- <div class="container"> -->
+                        <form class="form" novalidate (ngSubmit)="saveCardInfo()" [formGroup]="cardForm">
+                            <div class="form-group" style="display: block">
+                                <label class="col-md-4 control-label font-weight-bold" for="cardIdNameId">Card
+                                    Id</label>
+                                <div class="col-md-8">
+                                    <input class="form-control" id="cardIdNameId" type="text"
+                                        placeholder="Card Name (required)" formControlName="idName"
+                                        [ngClass]="{'is-invalid': displayMessage.idName}" />
+                                    <span class="form-text invalid-feedback" *ngIf="displayMessage.idName">
+                                        {{displayMessage.idName}}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="display: block">
+                                <label class="col-md-4 control-label font-weight-bold" for="cardNameId">Card
+                                    Name</label>
+                                <div class="col-md-8">
+                                    <input class="form-control" id="cardNameId" type="text"
+                                        placeholder="Card Name (required)" formControlName="name"
+                                        [ngClass]="{'is-invalid': displayMessage.cardName}" />
+                                    <span class="form-text invalid-feedback" *ngIf="displayMessage.name">
+                                        {{displayMessage.name}}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-4 control-label font-weight-bold"
+                                    for="descriptionId">Description</label>
+                                <div class="col-md-8">
+                                    <textarea class="form-control" id="descriptionId" placeholder="Description" rows=3
+                                        formControlName="description">
+                                                                                                            </textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-4 control-label font-weight-bold" for="rarityId">Rarity</label>
+                                <div class="col-md-8">
+                                    <select class="form-control" id="rarityId" formControlName="rarity"
+                                        (change)="onSelectedRarity($event)"
+                                        [ngClass]="{'is-invalid': displayMessage.rarity}">
+                                        <option disabled [ngValue]="null">Select card rarity</option>
+                                        <option value="common">Common</option>
+                                        <option value="rare">Rare</option>
+                                        <option value="epic">Epic</option>
+                                        <option value="legendary">Legendary</option>
+                                    </select>
+                                    <span class="form-text invalid-feedback" *ngIf="displayMessage.rarity">
+                                        {{displayMessage.rarity}}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-4 control-label font-weight-bold" for="typeId">Type</label>
+                                <div class="col-md-8">
+                                    <select class="form-control" id="typeId" formControlName="type"
+                                        (change)="onSelectedType($event)"
+                                        [ngClass]="{'is-invalid': displayMessage.type}">
+                                        <option [ngValue]="null">Select card type</option>
+                                        <option value="building">Building</option>
+                                        <option value="spell">Spell</option>
+                                        <option value="troop">Troop</option>
+                                    </select>
+                                    <span class="form-text invalid-feedback" *ngIf="displayMessage.type">
+                                        {{displayMessage.type}}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-4 control-label font-weight-bold" for="elixirCostId">Elixir
+                                    Cost</label>
+                                <div class="col-md-4">
+                                    <input class="form-control" id="elixirCostId" type="number"
+                                        placeholder="Elixir Cost (required)" formControlName="elixirCost"
+                                        [ngClass]="{'is-invalid': displayMessage.elixirCost}" />
+                                    <span class="form-text invalid-feedback" *ngIf="displayMessage.elixirCost">
+                                        {{displayMessage.elixirCost}}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-4 control-label font-weight-bold" for="versionId">Version</label>
+                                <div class="col-md-4">
+                                    <input class="form-control" id="versionId" type="number"
+                                        placeholder="Version (required)" formControlName="version"
+                                        [ngClass]="{'is-invalid': displayMessage.version}" />
+                                    <span class="form-text invalid-feedback" *ngIf="displayMessage.version">
+                                        {{displayMessage.version}}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-4 control-label font-weight-bold" for="countId">Count</label>
+                                <div class="col-md-4">
+                                    <input class="form-control" id="countId" type="number"
+                                        placeholder="Count (required)" formControlName="count"
+                                        [ngClass]="{'is-invalid': displayMessage.count}" />
+                                    <span class="form-text invalid-feedback" *ngIf="displayMessage.count">
+                                        {{displayMessage.count}}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-4 control-label font-weight-bold" for="deployTimeId">Deploy
+                                    Time</label>
+                                <div class="col-md-4">
+                                    <input class="form-control" id="deployTimeId" type="number"
+                                        placeholder="Deploy Type (required)" formControlName="deployTime"
+                                        [ngClass]="{'is-invalid': displayMessage.deployTime}" />
+                                    <span class="form-text invalid-feedback" *ngIf="displayMessage.deployTime">
+                                        {{displayMessage.deployTime}}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-4 control-label font-weight-bold" for="hitSpeedId">Hit
+                                    Speed</label>
+                                <div class="col-md-4">
+                                    <input class="form-control" id="hitSpeedId" type="number"
+                                        placeholder="Hit Speed (required)" formControlName="hitSpeed"
+                                        [ngClass]="{'is-invalid': displayMessage.hitSpeed}" />
+                                    <span class="form-text invalid-feedback" *ngIf="displayMessage.hitSpeed">
+                                        {{displayMessage.hitSpeed}}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-4 control-label font-weight-bold" for="lifeTimeId">Life
+                                    Time</label>
+                                <div class="col-md-4">
+                                    <input class="form-control" id="lifeTimeId" type="number"
+                                        placeholder="Life Time (required)" formControlName="lifeTime"
+                                        [ngClass]="{'is-invalid': displayMessage.lifeTime}" />
+                                    <span class="form-text invalid-feedback" *ngIf="displayMessage.lifeTime">
+                                        {{displayMessage.lifeTime}}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-4 control-label font-weight-bold"
+                                    for="projectileRangeId">Projectile Range</label>
+                                <div class="col-md-4">
+                                    <input class="form-control" id="projectileRangeId" type="number"
+                                        placeholder="Projectile Range (required)" formControlName="projectileRange"
+                                        [ngClass]="{'is-invalid': displayMessage.projectileRange}" />
+                                    <span class="form-text invalid-feedback" *ngIf="displayMessage.projectileRange">
+                                        {{displayMessage.projectileRange}}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-4 control-label font-weight-bold" for="radiusId">Radius</label>
+                                <div class="col-md-4">
+                                    <input class="form-control" id="radiusId" type="number"
+                                        placeholder="Radius (required)" formControlName="radius"
+                                        [ngClass]="{'is-invalid': displayMessage.radius}" />
+                                    <span class="form-text invalid-feedback" *ngIf="displayMessage.radius">
+                                        {{displayMessage.radius}}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <br />
+                            <div class="form-group">
+                                <div class="col-md-8">
+                                    <div class="row">
+                                        <div class="col-xs-12 col-md-4 my-2">
+                                            <button class="btn btn-primary btn-block" type="submit"
+                                                [disabled]='!cardForm.valid'>
+                                                <i class="fas fa-save fa-lg"></i> SAVE
+                                            </button>
+                                        </div>
+                                        <!-- <div class="col-xs-12 col-md-4 my-2">
+                                                                                                                    <a class="btn btn-secondary btn-block" [routerLink]="['/products']">
+                                                                                                                        <i class="fas fa-arrow-circle-left fa-lg"></i> CANCEL
+                                                                                                                    </a>
+                                                                                                                </div>
+                                                                                                                <div *ngIf="product.id != '0'" class="col-xs-12 col-md-4 my-2">
+                                                                                                                    <a class="btn btn-danger btn-block text-light" (click)="deleteProduct()">
+                                                                                                                        <i class="fas fa-trash-alt fa-lg"></i> DELETE
+                                                                                                                    </a>
+                                                                                                                </div> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <!-- </div> -->
+                    </div>
+                </div>
+            </ng-template>
+        </ngb-tab>
+        <ngb-tab title="Arena">
+            <ng-template ngbTabContent>
+                Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid.
+                <p>Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko
+                    farm-to-table
+                    craft beer twee. Qui photo booth letterpress, commodo enim craft beer mlkshk aliquip jean shorts
+                    ullamco ad vinyl
+                    cillum PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit. Keytar helvetica
+                    VHS salvia
+                    yr, vero magna velit sapiente labore stumptown. Vegan fanny pack odio cillum wes anderson 8-bit,
+                    sustainable jean
+                    shorts beard ut DIY ethical culpa terry richardson biodiesel. Art party scenester stumptown, tumblr
+                    butcher vero
+                    sint qui sapiente accusamus tattooed echo park.</p>
+            </ng-template>
+        </ngb-tab>
+    </ngb-tabset>
+</div>

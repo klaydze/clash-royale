@@ -13,6 +13,8 @@ namespace ClashRoyaleApi.Infrastructure.Repository
     public class RepositoryBase<TEntity> : IRepositoryBase<TEntity>
         where TEntity : class
     {
+        Func<TEntity, int> findById { get; set; }
+
         protected readonly ClashRoyaleContext ClashRoyaleContext;
 
         public RepositoryBase(ClashRoyaleContext context)
@@ -32,9 +34,21 @@ namespace ClashRoyaleApi.Infrastructure.Repository
             => ClashRoyaleContext.Set<TEntity>()
                     .IncludeMultiple(includes);
 
-        public virtual async Task<TEntity> GetByIdAsync(int id)
-            => await ClashRoyaleContext.Set<TEntity>()
-                                    .FindAsync(id);
+        public virtual async Task<TEntity> GetByIdAsync(int id, params Expression<Func<TEntity, object>>[] includes)
+        {
+            var parameterExpression = Expression.Parameter(typeof(TEntity), "object");
+            var propertyOrFieldExpression = Expression.PropertyOrField(parameterExpression, "Id");
+            var equalityExpression = Expression.Equal(propertyOrFieldExpression, Expression.Constant(id, typeof(int)));
+            var lambdaExpression = Expression.Lambda<Func<TEntity, bool>>(equalityExpression, parameterExpression);
+
+            var query = ClashRoyaleContext.Set<TEntity>()
+                        .IncludeMultiple(includes);
+
+            return await query.SingleOrDefaultAsync(lambdaExpression);
+
+            /*return await ClashRoyaleContext.Set<TEntity>()
+                     .FindAsync(id);*/
+        }
 
         public Task SaveAsync()
             => ClashRoyaleContext.SaveChangesAsync();

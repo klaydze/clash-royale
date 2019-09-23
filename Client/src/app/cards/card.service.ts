@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map, catchError, share } from 'rxjs/operators';
+import { map, catchError, share, tap } from 'rxjs/operators';
 import { ApiHelper } from '../shared/Helper';
 import { Card } from './card';
-import { PagedResults } from '../shared/PagedResults';
+import { PagedResults } from '../models/PagedResults';
 
 @Injectable({
   'providedIn': 'root'
 })
 export class CardService {
-  private _cardsApi = `${ApiHelper.ClashRoyaleApi}/cards`;
-  private _cardImageApi = `${ApiHelper.ClashRoyaleImageApi}/cards`;
+  private _cardsApi = `${ApiHelper.clashRoyaleApi}/cards`;
+  private _cardImageApi = `${ApiHelper.clashRoyaleImageApi}/cards`;
 
   constructor(private _http: HttpClient) { }
 
@@ -84,29 +84,22 @@ export class CardService {
     } else {
       apiSearch = `${this._cardsApi}?search=rarity eq ${rarity}&search=name co ${cardName}`;
     }
-    
-    return this._http.get<PagedResults<Card>>(apiSearch)
-    .pipe(
-      map(data => {
-        return this.processData(data.items);
-      }),
-      catchError(this.handleError)
-    );
 
-    // return this.getCards()
-    //   .pipe(
-    //     map(data => {
-    //       if (cardName) {
-    //         return data.filter((card: Card) => card.name.toLocaleLowerCase().indexOf(cardName) !== -1 &&
-    //           card.rarity.toLocaleLowerCase() === rarity.toLocaleLowerCase());
-    //       } else {
-    //         return data.filter((card: Card) =>
-    //           card.rarity.toLocaleLowerCase() === rarity.toLocaleLowerCase());
-    //       }
-    //     }),
-    //     share(),
-    //     catchError(this.handleError)
-    //   );
+    return this._http.get<PagedResults<Card>>(apiSearch)
+      .pipe(
+        map(data => {
+          return this.processData(data.items);
+        }),
+        catchError(this.handleError)
+      );
+  }
+
+  saveCardInformation(newCardInfo: Card): Observable<Card> {
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json; charset=utf-8'
+    });
+
+    return this._http.post<Card>(`${this._cardsApi}`, JSON.stringify(newCardInfo), { headers: headers });
   }
 
   private handleError(err: HttpErrorResponse) {

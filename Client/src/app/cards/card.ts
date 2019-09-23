@@ -14,7 +14,7 @@
 // }
 
 export class Card {
-    id: string;
+    id: number;
     idName: string;
     rarity: string;
     type: string;
@@ -23,6 +23,31 @@ export class Card {
     elixirCost: number;
     version: number;
     imageUrl: string;
+    targets: string;
+    hitSpeed: number;
+    count: number;
+    range: string
+    speed: string;
+    radius: number;
+    deployTime: number;
+    lifetime: number;
+    dashRange: string;
+    projectileRange: number;
+    cardStatistics: CardStatistics[] = [];
+}
+
+export class CardStatistics {
+    cardLevel: number;
+    hitPoints: number;
+    damange: number;
+    damagePerSecond: number;
+    dashDamage: number;
+    areaDamage: number;
+    crownTowerDamage: number;
+    chargeDamage: number;
+    shieldHitpoints: number;
+    duration: number;
+    healingPerSecond: number;
 }
 
 export class CardDetail {

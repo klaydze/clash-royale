@@ -1,4 +1,5 @@
 ﻿using ClashRoyaleApi.Infrastructure.Attributes;
+using System.Collections.Generic;
 
 namespace ClashRoyaleApi.Infrastructure.Models
 {
@@ -27,8 +28,30 @@ namespace ClashRoyaleApi.Infrastructure.Models
         [SearchableInteger]
         public int ElixirCost { get; set; }
 
+        public string Targets { get; set; }
+
+        public float HitSpeed { get; set; }
+
+        public int Count { get; set; }
+
+        public string Range { get; set; }
+
+        public string Speed { get; set; }
+
+        public float Radius { get; set; }
+
+        public float DeployTime { get; set; }
+
+        public int Lifetime { get; set; }
+
+        public string DashRange { get; set; }
+
+        public int ProjectileRange { get; set; }
+
         public Arena Arena { get; set; }
 
         public int Version { get; set; }
+
+        public List<CardStatistics> CardStatistics { get; set; }
     }
 }

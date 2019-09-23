@@ -7,5 +7,8 @@ ClashRoyaleApi/ClashRoyaleApi.Core/bin
 ClashRoyaleApi/ClashRoyaleApi.Core/obj
 ClashRoyaleApi/ClashRoyaleApi.Infrastructure/bin
 ClashRoyaleApi/ClashRoyaleApi.Infrastructure/obj
+ClashRoyaleApi/ClashRoyaleApi.Sts/bin
+ClashRoyaleApi/ClashRoyaleApi.Sts/obj
+ClashRoyaleApi/ClashRoyaleApi.Sts/Properties
 appsettings.Production.json
 .vs/

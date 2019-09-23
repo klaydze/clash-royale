@@ -1,0 +1,160 @@
+$cardTitleColor: #007bff;
+$titleBackgroundColor: whitesmoke;
+/* On mouse-over, add a deeper shadow */
+/* Add some padding inside the card container */
+.card-detail-card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+  border-radius: 5px;
+  padding-bottom: 20px;
+  margin-top: 20px;
+  .card-detail-card-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 5px;
+    background-color: $titleBackgroundColor;
+    color: $cardTitleColor;
+  }
+  &:hover {
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+  }
+}
+
+.card-detail-card-container {
+  padding: 20px;
+  margin: 10px;
+}
+
+img {
+  border-radius: 5px 5px 0 0;
+}
+
+// Card Information Box
+.card-wrapper {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.card-wrapper-inner {
+  display: flex;
+  flex-flow: row wrap;
+  // width: calc(100% - 340px);
+  height: 100%;
+}
+
+// .card-wrapper-inner img {
+.img-header {
+  width: 148px;
+  height: 178px;
+  display: block;
+  // left: 10px;
+  position: relative;
+}
+
+.card-header-name-main {
+  width: 100%;
+}
+
+.card-header-main {
+  font-size: 30px;
+  line-height: 38px;
+  font-weight: 900;
+}
+
+.card-header-name-sub {
+  width: 100%;
+}
+
+.card-header-sub {
+  font-size: 22px;
+  line-height: 38px;
+  font-weight: 900;
+}
+
+.card-description {
+  margin-bottom: 15px;
+}
+
+.card-basic-info {
+  flex: 1;
+  margin-top: 8px;
+  margin-left: 20px;
+}
+
+.card-stat-per-level {
+  margin-top: 8px;
+}
+
+.card-stat-header {
+  font-weight: 900;
+  margin-top: 15px;
+}
+
+.card-stat-content {
+  display: flex;
+  vertical-align: top;
+}
+
+.card-stat-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  border-bottom: 1px dotted #c0c0c0;
+  margin-left: 5px;
+  margin-right: 5px;
+  position: relative;
+  top: -10px;
+}
+
+.card-stat-value {
+  font-weight: 900;
+}
+
+@media screen and (max-width: 600px) {
+  .card-header-name-main {
+    order: 1;
+    text-align: center;
+    width: 100%;
+  }
+
+  .card-header-name-sub {
+    text-align: center;
+    width: 100%;
+  }
+
+  .card-wrapper-inner img {
+    order: 0;
+    margin: 0 auto;
+  }
+
+  .card-basic-info {
+    order: 2;
+    max-width: 600px;
+    flex: initial;
+    margin-left: 0px;
+  }
+
+  .card-stat-per-level {
+    order: 3;
+    flex: initial;
+    font-size: 9px;
+    font-weight: 700;
+    vertical-align: middle;
+  }
+
+  .card-stat {
+    margin-top: 20px;
+    text-align: left;
+  }
+
+  .card-stat-content {
+    width: 100%;
+  }
+
+  .stat-text {
+    display: none;
+  }
+}
+
+// Card Information Box

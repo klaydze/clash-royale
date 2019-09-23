@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map, tap, catchError } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
 import { ApiHelper } from '../shared/Helper';
 
 @Injectable({
   'providedIn': 'root'
 })
 export class ChestService {
-  private _chestApi = `${ApiHelper.ClashRoyaleApi}/chests`;
-  private _chestImageApi = `${ApiHelper.ClashRoyaleImageApi}/chests/`;
+  private _chestApi = `${ApiHelper.clashRoyaleApi}/chests`;
+  private _chestImageApi = `${ApiHelper.clashRoyaleImageApi}/chests/`;
 
   constructor(private http: HttpClient) { }
 

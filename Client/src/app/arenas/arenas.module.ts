@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { ArenasRoutingModule } from './arenas-routing.module';
 import { SharedModule } from '../shared/shared.module';
-import { ArenasComponent } from './arenas.component';
+import { ArenasComponent } from './arena-list/arenas.component';
 import { ArenaService } from './arena.service';
-import { ArenaDetailsComponent } from './arena-details.component';
+import { ArenaDetailsComponent } from './arena-details/arena-details.component';
 
 @NgModule({
   imports: [

@@ -2,6 +2,7 @@
 using ClashRoyaleApi.Core.Entities;
 using ClashRoyaleApi.Infrastructure.Models;
 using ClashRoyaleApi.Infrastructure.Services.Contracts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Options;
@@ -52,13 +53,16 @@ namespace ClashRoyaleApi.Controllers
         [HttpGet("{cardId}", Name = nameof(GetCardById))]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
+        [Authorize(Policy = "ReadOnlyPolicy")]
         public async Task<ActionResult<Card>> GetCardById(int cardId)
         {
+            var usr = User;
+
             Card card = await _cardService.GetCardByIdAsync(cardId);
 
             if (card == null)
                 return NotFound(new ApiError($"Card not found!"));
-            
+
             return Ok(card);
         }
 
@@ -66,16 +70,17 @@ namespace ClashRoyaleApi.Controllers
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
+        [Authorize(Policy = "ReadWritePolicy")]
         public async Task<IActionResult> CreateNewCard([FromBody] CardEntity cardEntity)
         {
-            // TODO Add authentication
-
             await _cardService.CreateCardAsync(cardEntity);
 
-            var location = _linkGenerator.GetUriByAction("GetCardById", "Cards", 
-                                                            new { id = cardEntity.Id }, 
-                                                            HttpContext.Request.Scheme, 
-                                                            HttpContext.Request.Host);
+            //var location = _linkGenerator.GetUriByAction(nameof(GetCardById), "Cards",
+            //                                                new { id = cardEntity.Id },
+            //                                                HttpContext.Request.Scheme,
+            //                                                HttpContext.Request.Host);
+
+            var location = "https://localhost:5001";
 
             return Created(location, cardEntity);
         }
@@ -84,13 +89,12 @@ namespace ClashRoyaleApi.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
+        [Authorize(Policy = "ReadWritePolicy")]
         public async Task<IActionResult> UpdateCard(int? cardId, [FromBody] CardEntity cardEntity)
         {
-            // TODO Add authentication
-
             if (cardId != cardEntity.Id)
                 return BadRequest(new ApiError("Can't update the record!"));
-            
+
             await _cardService.UpdateCardAsync(cardEntity);
 
             // TODO Do we need to check the existence of card before we update?
@@ -101,10 +105,9 @@ namespace ClashRoyaleApi.Controllers
         [HttpDelete("{id}", Name = nameof(DeleteCard))]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
+        [Authorize(Policy = "AdminPolicy")]
         public async Task<IActionResult> DeleteCard(int id)
         {
-            // TODO Add authentication
-
             var card = await _cardService.GetCardByIdAsync(id);
 
             if (card == null)
