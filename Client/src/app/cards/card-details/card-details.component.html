@@ -1,6 +1,6 @@
 <div class="container">
     <div class="card-wrapper">
-        <div class="card-wrapper-inner">
+        <div class="card-wrapper-inner" *ngIf="selectedCard$ | async as selectedCard">
             <div class="card-header-main card-header-name-main">
                 {{selectedCard?.name}}
             </div>
@@ -80,7 +80,7 @@
                     </div>
                 </div>
 
-                <div class="card-stat">
+                <div class="card-stat" *ngIf="selectedCard?.cardStatistics?.length > 0">
                     <div class="card-header-sub card-header-name-sub">Statistics</div>
                     <div class="card-stat-content ">
                         <div class="card-stat-per-level">

@@ -49,7 +49,6 @@ export class CardStatistics {
     duration: number;
     healingPerSecond: number;
 }
-
 export class CardDetail {
     constructor() {
         this.troops = [];
@@ -60,4 +59,13 @@ export class CardDetail {
     troops: Card[];
     buildings: Card[];
     spells: Card[];
+}
+
+export class SearchTermCardFilter {
+    constructor() {
+        this.searchTerm = '';
+        this.rarity = 'all';
+    }
+    searchTerm: string;
+    rarity: string;
 }

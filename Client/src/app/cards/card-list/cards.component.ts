@@ -1,160 +1,159 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { CardService } from '../card.service';
-import { Card, CardDetail } from '../card';
+import { Card, SearchTermCardFilter } from '../card';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { map, catchError, debounceTime, switchMap, tap, distinctUntilChanged } from 'rxjs/operators';
+import { combineLatest, BehaviorSubject, Observable, Subject, EMPTY, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { PagedResults } from 'src/app/models/PagedResults';
 
 @Component({
   templateUrl: './cards.component.html',
-  styleUrls: ['./cards.component.scss']
+  styleUrls: ['./cards.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CardsComponent implements OnInit {
+export class CardsComponent {
   pageTitle = 'Cards';
   errorMessage: string;
 
-  // For filter
-  filteredCardsDetail: CardDetail = new CardDetail();
-  cards: Card[] = [];
-  filteredCards: Card[];
-  selectedCard: Card;
-  selectedRarity = 'All';
+  _filter: SearchTermCardFilter = new SearchTermCardFilter();
 
-  // For pagination
-  page = 1;
-  totalRecordCount: number;
+  private selectedRaritySubject = new BehaviorSubject<string>('all');
+  selectedRarityAction$ = this.selectedRaritySubject.asObservable();
 
-  _filterKeyword: string;
-  get filterKeyword(): string {
-    return this._filterKeyword;
+  private errorMessageSubject = new Subject<string>();
+  errorMessage$ = this.errorMessageSubject.asObservable();
+
+  searching = false;
+  searchFailed = false;
+
+  _searchTerm: string;
+  get searchTerm(): string {
+    return this._searchTerm;
   }
-  set filterKeyword(value: string) {
-    this._filterKeyword = value;
-    this.filteredCards = this.performFilter(this.filterKeyword);
+  set searchTerm(value: string) {
+    this._searchTerm = value;
+
+    this._filter.searchTerm = value;
+    this._filter.rarity = this.selectedRaritySubject.value;
+
+    this._cardService.onSearch(this._filter);
   }
 
   constructor(private _cardService: CardService,
     private _modalService: NgbModal,
     private _route: ActivatedRoute,
-    private _spinner: NgxSpinnerService)  { }
+    private _spinner: NgxSpinnerService,
+    private _http: HttpClient) { }
 
-  performFilter(keyword: string): Card[] {
-    if ((this.selectedRarity) && (this.selectedRarity.toLocaleLowerCase() === 'all')) {
-      this.filteredCards = this.cards.filter((card: Card) =>
-        (card.name.toLocaleLowerCase().indexOf(keyword.toLocaleLowerCase()) !== -1 ||
-          card.type.toLocaleLowerCase().indexOf(keyword.toLocaleLowerCase()) !== -1));
-    } else if (this.filterKeyword == undefined || this.filterKeyword == '') {
-      this.getCardsByRarity(this.selectedRarity);
-    } else {
-      this.filteredCards = this.cards.filter((card: Card) =>
-        (card.name.toLocaleLowerCase().indexOf(keyword.toLocaleLowerCase()) !== -1 ||
-          card.type.toLocaleLowerCase().indexOf(keyword.toLocaleLowerCase()) !== -1) &&
-        (card.rarity.toLocaleLowerCase() === this.selectedRarity.toLocaleLowerCase()));
-    }
 
-    this.groupTheCards(this.filteredCards);
-    this.totalRecordCount = this.filteredCards.length;
+    cards$ = this._cardService.searchResults$;
 
-    return this.filteredCards;
-  }
+  // cards$ = combineLatest([
+  //   this._cardService.cards$,
+  //   this.selectedRarityAction$
+  // ])
+  //   .pipe(
+  //     map(([cards, rarity]) => {
+  //       if (rarity.toLocaleLowerCase() === 'all') {
+  //         return cards
+  //       } else {
+  //         return cards.filter(card =>
+  //           rarity ? card.rarity.toLocaleLowerCase() === rarity.toLocaleLowerCase() : true
+  //         )
+  //       }
+  //     }),
+  //     catchError(this.handleError)
+  //   )
 
-  /**
-   * Local method to retrieve all the list of cards
-   */
-  getAllCards(): void {
-    this._spinner.show();
-    
-    this._cardService.getCards()
-      .subscribe(
-        data => {
-          this.cards = data;
-          this.filteredCards = this.cards;
+  cardsTroop$ = this.cards$
+    .pipe(
+      map(cards =>
+        cards.filter(card => card.type.toLocaleLowerCase() === 'troop')
+      )
+    );
 
-          this.groupTheCards(data);
+  cardsSpell$ = this.cards$
+    .pipe(
+      map(cards =>
+        cards.filter(card => card.type.toLocaleLowerCase() === 'spell')
+      )
+    );
 
-          this._spinner.hide();
-        }
-      );
-  }
+  cardsBuilding$ = this.cards$
+    .pipe(
+      map(cards =>
+        cards.filter(card => card.type.toLocaleLowerCase() === 'building')
+      )
+    );
 
-  /**
-   * Local method to retrieve all the list of cards by rarity
-   * @param rarity Find cards by rarity
-   */
-  getCardsByRarity(rarity: string): void {
-    this._spinner.show();
+  searchTypeahead = (text$: Observable<string>) =>
+    text$.pipe(
+      debounceTime(1000),
+      distinctUntilChanged(),
+      tap(() => this.searching = true),
+      switchMap(term => term.length < 3 || term.length === 0 ? [] :
+        this._http.get<PagedResults<Card>>(`https://localhost:5001/api/cards?search=name co ${term}`)
+          .pipe(
+            tap(() => this.searchFailed = false),
+            map(cards =>
+              cards.items.slice(0, 10).map(card => card.name)
+            ),
+            catchError(() => {
+              this.searchFailed = true;
+              return of([]);
+            }))
+      ),
+      tap(() => this.searching = false)
+    )
 
-    this._cardService.getCardsByRarity(rarity, this.filterKeyword)
-      .subscribe(
-        data => {
-          this.cards = data;
-          this.filteredCards = data;
-          this.totalRecordCount = this.filteredCards.length;
+  vm$ = combineLatest([
+    this.cardsTroop$,
+    this.cardsSpell$,
+    this.cardsBuilding$
+  ])
+    .pipe(
+      map(([cardsTroop, cardsSpell, cardsBuilding]) =>
+        ({ cardsTroop, cardsSpell, cardsBuilding })
+      )
+    );
 
-          this.groupTheCards(data);
-
-          this._spinner.hide();
-
-          return this.filteredCards;
-        }
-      );
-  }
-
-  groupTheCards(data: Card[]): void {
-    this.filteredCardsDetail = new CardDetail();
-
-    data.forEach(c => {
-      if (c.type.toLocaleLowerCase() === "troop") {
-        this.filteredCardsDetail.troops.push(c);
-      } else if (c.type.toLocaleLowerCase() === "spell") {
-        this.filteredCardsDetail.spells.push(c);
-      } else {
-        this.filteredCardsDetail.buildings.push(c);
-      }
-    });
-  }
-
-  /**
-   * Open a modal to show info of card
-   * @param id Card id to show
-   */
-  open(id: number): void {
-    this.selectedCard = this.filteredCards.find(card => card.id === id);
-
-    if (this.selectedCard) {
-      const modalRef = this._modalService.open(CardModalContentComponent, { size: 'lg' });
-      modalRef.componentInstance.selectedCard = this.selectedCard;
-    }
-  }
-
-  /**
-   * Fires every time rarity drop down changed
-   * @param rarity Selected rarity in the drop down
-   */
   onRarityChange(rarity: string) {
-    this.selectedRarity = rarity;
-    // this._filterKeyword = '';
+    this._filter.rarity = rarity;
 
-    if (this.selectedRarity.toLocaleLowerCase() === 'all') {
-      this.getAllCards();
-    } else {
-      this.getCardsByRarity(this.selectedRarity);
-    }
+    this.selectedRaritySubject.next(rarity);
+    
+    this._cardService.onSearch(this._filter);
   }
 
-  ngOnInit() {
-    this._spinner.show();
+  onSelectedCardId(id: number) {
+    this._cardService.onSelectedCardId(id);
+  }
 
-    this._route.data
-      .subscribe(data => {
-        this.cards = data['resolvedCardsData'];
-        this.filteredCards = this.cards;
+  onSearch() {
 
-        this.groupTheCards(this.cards);
+  }
 
-        this._spinner.hide();
-      });
+  private handleError(err: any) {
+    // in a real world app, we may send the server to some remote logging infrastructure
+    // instead of just logging it to the console
+    let errorMessage: string;
+    if (err.error instanceof ErrorEvent) {
+      // A client-side or network error occurred. Handle it accordingly.
+      errorMessage = `An error occurred: ${err.error.message}`;
+    } else {
+      // The backend returned an unsuccessful response code.
+      // The response body may contain clues as to what went wrong,
+      errorMessage = `Backend returned code ${err.status}: ${err.error.message}`;
+    }
+
+    console.error(`CardsComponent: ${errorMessage}`);
+
+    return EMPTY;
+    // return throwError(errorMessage);
   }
 }
 

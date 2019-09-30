@@ -104,6 +104,7 @@ namespace ClashRoyaleApi.Sts
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCors("StsGlobalCorsPolicy");
 

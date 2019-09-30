@@ -2,8 +2,8 @@ import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/r
 import { Injectable } from "@angular/core";
 import { Observable, of } from "rxjs";
 
-import { CardService } from "./card.service";
-import { Card } from "./card";
+import { CardService } from "../card.service";
+import { Card } from "../card";
 
 @Injectable({
     providedIn: 'root'
@@ -14,7 +14,7 @@ export class CardResolver implements Resolve<Card[]> {
 
     resolve(route: ActivatedRouteSnapshot, 
         state: RouterStateSnapshot): Card[] | Observable<Card[]> | Promise<Card[]> {
-        return this.cardService.getCards();
+        return this.cardService.cards$;
     }
 
 }

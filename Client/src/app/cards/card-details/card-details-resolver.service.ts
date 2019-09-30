@@ -9,10 +9,13 @@ import { CardService } from "../card.service";
 export class CardDetailsResolver implements Resolve<Card> {
     constructor(private cardService: CardService) { }
 
-    resolve(route: import("@angular/router").ActivatedRouteSnapshot, 
-            state: import("@angular/router").RouterStateSnapshot): Card | import("rxjs").Observable<Card> | Promise<Card> {
-        const id = route.paramMap.get('id');
+    resolve(route: import("@angular/router").ActivatedRouteSnapshot,
+        state: import("@angular/router").RouterStateSnapshot): import("rxjs").Observable<Card> | Promise<Card> {
 
-        return this.cardService.getCardById(id);
+        const id = +route.paramMap.get('id');
+        this.cardService.onSelectedCardId(id);
+
+        // return this.cardService.getCardById(id);
+        return this.cardService.card$;
     }
 }
