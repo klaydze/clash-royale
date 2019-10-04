@@ -1,23 +1,25 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { Component, Input, ChangeDetectionStrategy, ViewChild } from '@angular/core';
+import { NgbModal, NgbActiveModal, NgbTypeaheadConfig, NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
 
 import { CardService } from '../card.service';
 import { Card, SearchTermCardFilter } from '../card';
-import { NgxSpinnerService } from 'ngx-spinner';
-import { map, catchError, debounceTime, switchMap, tap, distinctUntilChanged } from 'rxjs/operators';
-import { combineLatest, BehaviorSubject, Observable, Subject, EMPTY, of } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { PagedResults } from 'src/app/models/PagedResults';
+import { map, catchError, debounceTime, switchMap, tap, distinctUntilChanged, merge, filter } from 'rxjs/operators';
+import { combineLatest, BehaviorSubject, Observable, Subject, EMPTY } from 'rxjs';
 
 @Component({
   templateUrl: './cards.component.html',
   styleUrls: ['./cards.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [NgbTypeaheadConfig]
 })
 export class CardsComponent {
+  @ViewChild('instance', { static: false }) instance: NgbTypeahead;
+
   pageTitle = 'Cards';
   errorMessage: string;
+
+  focus$ = new Subject<string>();
+  click$ = new Subject<string>();
 
   _filter: SearchTermCardFilter = new SearchTermCardFilter();
 
@@ -27,87 +29,53 @@ export class CardsComponent {
   private errorMessageSubject = new Subject<string>();
   errorMessage$ = this.errorMessageSubject.asObservable();
 
-  searching = false;
-  searchFailed = false;
-
-  _searchTerm: string;
-  get searchTerm(): string {
-    return this._searchTerm;
-  }
-  set searchTerm(value: string) {
-    this._searchTerm = value;
-
-    this._filter.searchTerm = value;
-    this._filter.rarity = this.selectedRaritySubject.value;
-
-    this._cardService.onSearch(this._filter);
-  }
-
   constructor(private _cardService: CardService,
     private _modalService: NgbModal,
-    private _route: ActivatedRoute,
-    private _spinner: NgxSpinnerService,
-    private _http: HttpClient) { }
+    private _typeaheadConfig: NgbTypeaheadConfig) {
 
+    _typeaheadConfig.showHint = false;
+  }
 
-    cards$ = this._cardService.searchResults$;
-
-  // cards$ = combineLatest([
-  //   this._cardService.cards$,
-  //   this.selectedRarityAction$
-  // ])
-  //   .pipe(
-  //     map(([cards, rarity]) => {
-  //       if (rarity.toLocaleLowerCase() === 'all') {
-  //         return cards
-  //       } else {
-  //         return cards.filter(card =>
-  //           rarity ? card.rarity.toLocaleLowerCase() === rarity.toLocaleLowerCase() : true
-  //         )
-  //       }
-  //     }),
-  //     catchError(this.handleError)
-  //   )
+  cards$ = this._cardService.searchResults$
+    .pipe(
+      catchError(err => this.handleError(err))
+    )
 
   cardsTroop$ = this.cards$
     .pipe(
       map(cards =>
-        cards.filter(card => card.type.toLocaleLowerCase() === 'troop')
+        cards.items.filter(card => card.type.toLocaleLowerCase() === 'troop')
       )
-    );
+    )
 
   cardsSpell$ = this.cards$
     .pipe(
       map(cards =>
-        cards.filter(card => card.type.toLocaleLowerCase() === 'spell')
+        cards.items.filter(card => card.type.toLocaleLowerCase() === 'spell')
       )
-    );
+    )
 
   cardsBuilding$ = this.cards$
     .pipe(
       map(cards =>
-        cards.filter(card => card.type.toLocaleLowerCase() === 'building')
+        cards.items.filter(card => card.type.toLocaleLowerCase() === 'building')
       )
-    );
+    )
 
-  searchTypeahead = (text$: Observable<string>) =>
+  search = (text$: Observable<string>) =>
     text$.pipe(
       debounceTime(1000),
       distinctUntilChanged(),
-      tap(() => this.searching = true),
-      switchMap(term => term.length < 3 || term.length === 0 ? [] :
-        this._http.get<PagedResults<Card>>(`https://localhost:5001/api/cards?search=name co ${term}`)
-          .pipe(
-            tap(() => this.searchFailed = false),
-            map(cards =>
-              cards.items.slice(0, 10).map(card => card.name)
-            ),
-            catchError(() => {
-              this.searchFailed = true;
-              return of([]);
-            }))
-      ),
-      tap(() => this.searching = false)
+      merge(this.focus$),
+      merge(this.click$.pipe(filter(() => !this.instance.isPopupOpen()))),
+      switchMap(() =>
+        this.cards$.pipe(
+          map(cards =>
+            cards.items.slice(0, 10).map(card => card.name)
+          ),
+          catchError(err => this.handleError(err))
+        )
+      )
     )
 
   vm$ = combineLatest([
@@ -119,13 +87,13 @@ export class CardsComponent {
       map(([cardsTroop, cardsSpell, cardsBuilding]) =>
         ({ cardsTroop, cardsSpell, cardsBuilding })
       )
-    );
+    )
 
   onRarityChange(rarity: string) {
     this._filter.rarity = rarity;
 
     this.selectedRaritySubject.next(rarity);
-    
+
     this._cardService.onSearch(this._filter);
   }
 
@@ -133,8 +101,11 @@ export class CardsComponent {
     this._cardService.onSelectedCardId(id);
   }
 
-  onSearch() {
+  onSearchChanged(keyword: string) {
+    this._filter.searchTerm = keyword;
+    this._filter.rarity = this.selectedRaritySubject.value;
 
+    this._cardService.onSearch(this._filter);
   }
 
   private handleError(err: any) {
@@ -147,7 +118,7 @@ export class CardsComponent {
     } else {
       // The backend returned an unsuccessful response code.
       // The response body may contain clues as to what went wrong,
-      errorMessage = `Backend returned code ${err.status}: ${err.error.message}`;
+      errorMessage = `Backend returned code ${err.status}: ${err.error}`;
     }
 
     console.error(`CardsComponent: ${errorMessage}`);

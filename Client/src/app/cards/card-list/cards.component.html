@@ -1,9 +1,9 @@
 <div class="container mt-5">
-  <div class="card">
-    <div class="card-body">
-      <h1 class="card-title">
+  <div class="card-detail">
+    <div class="card-detail-container">
+      <h2 class="text-primary">
         {{pageTitle}}
-      </h1>
+      </h2>
       <div class="card-title mb-5">
         <form class="form-inline">
           <strong class="mr-sm-2">Search by rarity:</strong>
@@ -14,16 +14,16 @@
             <option value="epic">Epic</option>
             <option value="legendary">Legendary</option>
           </select>
-          <input name="filterKeyword" class="form-control mr-sm-2"
-            type="search" placeholder="Type card name or type here..." aria-label="Search" [(ngModel)]="searchTerm"
-            [ngbTypeahead]="searchTypeahead">
-          <span *ngIf="searching">searching...</span>
+          <input #instance="ngbTypeahead" name="filterKeyword" class="form-control mr-sm-2" type="text"
+            placeholder="Type card name or type here..." (keyup)="onSearchChanged($event.target.value)"
+            (focus)="focus$.next($event.target.value)" (click)="click$.next($event.target.value)" aria-label="Search"
+            [ngbTypeahead]="search">
         </form>
       </div>
 
       <ng-container *ngIf="vm$ | async as vm">
         <div class="container mb-5">
-          <h3 class="text-primary">Troops <span class="badge badge-danger">{{vm.cardsTroop.length}}</span>
+          <h3 class="card-detail-title">Troops <span class="badge badge-danger">{{vm.cardsTroop.length}}</span>
           </h3>
           <hr>
           <div class="row no-gutters">
@@ -39,7 +39,7 @@
         </div>
 
         <div class="container mb-5">
-          <h3 class="text-primary">Spells <span class="badge badge-danger">{{vm.cardsSpell.length}}</span>
+          <h3 class="card-detail-title">Spells <span class="badge badge-danger">{{vm.cardsSpell.length}}</span>
           </h3>
           <hr>
           <div class="row no-gutters">
@@ -55,7 +55,7 @@
         </div>
 
         <div class="container mb-5">
-          <h3 class="text-primary">Buildings <span class="badge badge-danger">{{vm.cardsBuilding.length}}</span>
+          <h3 class="card-detail-title">Buildings <span class="badge badge-danger">{{vm.cardsBuilding.length}}</span>
           </h3>
           <hr>
           <div class="row no-gutters">

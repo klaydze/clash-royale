@@ -5,6 +5,13 @@
 @import "~bootstrap/scss/functions";
 @import "~bootstrap/scss/variables";
 
+body {
+  background-color: #f9f9f9;
+  font-size: 15px;
+  font-family: "Raleway", sans-serif;
+  line-height: 1.80857;
+}
+
 /* MY CUSTOM CSS */
 .parallax {
   background-attachment: fixed;
@@ -181,18 +188,24 @@ hr.invis1 {
   padding-top: 10px;
 }
 
+/* Custom Card */
 $cardTitleColor: $primary;
 $cardTitleBackgroundColor: #f8f9fa;
 
+.card-detail-container {
+  padding: 20px;
+  margin: 10px;
+}
+
 /* On mouse-over, add a deeper shadow
    Add some padding inside the card container */
-.product-detail-card {
+.card-detail {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   transition: 0.3s;
   border-radius: 5px;
   margin-top: 20px;
 
-  .product-detail-card-title {
+  .card-detail-title {
     margin: auto;
     width: 100%;
     font-size: 1.5rem;
@@ -206,7 +219,5 @@ $cardTitleBackgroundColor: #f8f9fa;
   //   box-shadow: 0 8px 16px 0 rgba(56, 3, 3, 0.2);
   // }
 }
-.product-detail-card-container {
-  padding: 20px;
-  margin: 10px;
-}
+/* Custom Card */
+

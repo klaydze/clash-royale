@@ -53,7 +53,6 @@ namespace ClashRoyaleApi.Controllers
         [HttpGet("{cardId}", Name = nameof(GetCardById))]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        //[Authorize(Policy = "ReadOnlyPolicy")]
         public async Task<ActionResult<Card>> GetCardById(int cardId)
         {
             var usr = User;

@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Security.Claims;
 
 namespace ClashRoyaleApi
@@ -33,8 +34,18 @@ namespace ClashRoyaleApi
             // Get the default azure storage blob settings
             services.Configure<AzureBlobStorageSettings>(Configuration.GetSection("AzureBlobStorageSettings"));
 
+            // Get the default Sts settings
+            services.Configure<StsSettings>(Configuration.GetSection("DefaultStsSettings"));
+
             services.AddDbContext<ClashRoyaleContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("ClashRoyaleConnString"))
+                options.UseSqlServer(Configuration.GetConnectionString("ClashRoyaleConnString"),
+                sqlOptions =>
+                {
+                    sqlOptions.EnableRetryOnFailure(
+                        maxRetryCount: 5,
+                        maxRetryDelay: TimeSpan.FromSeconds(30),
+                        errorNumbersToAdd: null);
+                })
             );
 
             services.AddAutoMapper(typeof(AutoMapperProfile));
@@ -57,8 +68,8 @@ namespace ClashRoyaleApi
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
-                    options.Authority = "https://localhost:5003/";
-                    options.Audience = "clashroyale-api";
+                    options.Authority = Configuration.GetValue<string>("DefaultStsSettings:authority");
+                    options.Audience = Configuration.GetValue<string>("DefaultStsSettings:audience");
                 });
 
             services.AddAuthorization(options =>
@@ -72,7 +83,7 @@ namespace ClashRoyaleApi
                 options.AddPolicy("ReadWritePolicy", policy =>
                 {
                     policy.RequireAuthenticatedUser()
-                        .RequireClaim(ClaimTypes.Role, "user_read_write");
+                        .RequireClaim(ClaimTypes.Role, "user_read_write", "user_admin");
                 });
 
                 options.AddPolicy("AdminPolicy", policy =>

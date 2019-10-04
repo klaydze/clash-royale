@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError, combineLatest, BehaviorSubject, EMPTY, Subject } from 'rxjs';
-import { map, catchError, publishReplay, refCount, tap, switchMap, shareReplay, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { Observable, BehaviorSubject, EMPTY, Subject } from 'rxjs';
+import { map, catchError, tap, switchMap, shareReplay, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { ApiHelper } from '../shared/Helper';
 import { Card, SearchTermCardFilter } from './card';
 import { PagedResults } from '../models/PagedResults';
@@ -28,19 +28,18 @@ export class CardService {
 
   /**
    * Get all cards.
-   * @returns Observable<Card[]>
- */
+   * @returns Observable<PageResults<Card>>
+  */
   cards$ = this._http.get<PagedResults<Card>>(this._cardsApi)
     .pipe(
-      map(cards =>
-        cards.items.map(card => ({
+      map(cards => ({
+        ...cards,
+        items: cards.items.map(card => ({
           ...card,
           imageUrl: `${this._cardImageApi}/${card.idName}.png`
-        }) as Card)
-      ),
-      shareReplay(1),
-      catchError(this.handleError)
-    );
+        }))
+      }) as PagedResults<Card>)
+    )
 
   /**
    * Retrieve single card based on card id.
@@ -48,6 +47,7 @@ export class CardService {
    */
   card$ = this.selectedCardIdAction$
     .pipe(
+      tap(() => this._spinner.show()),
       switchMap(id =>
         this._http.get<Card>(`${this._cardsApi}/${id}`)
           .pipe(
@@ -57,9 +57,9 @@ export class CardService {
             }) as Card)
           )
       ),
+      tap(() => this._spinner.hide()),
       catchError(this.handleError)
     );
-
 
   onSelectedCardId(id: number) {
     this.selectedCardIdSubject.next(id);
@@ -82,50 +82,52 @@ export class CardService {
 
   /**
    * Search cards base on rarity and card name.
+   * @returns Observable<PageResults<Card>>
    */
   searchResults$ = this.searchFilterAction$
-  .pipe(
-    tap(() => this._spinner.show()),
-    map(filter => {
-      if ((filter.rarity.toLocaleLowerCase() === 'all') &&
-        (filter.searchTerm === undefined || filter.searchTerm.length === 0)) {
-        return `${this._cardsApi}`;
-      }
+    .pipe(
+      map(filter => {
+        if ((filter.rarity.toLocaleLowerCase() === 'all') &&
+          (filter.searchTerm === undefined || filter.searchTerm.length === 0)) {
+          return `${this._cardsApi}`;
+        }
 
-      if ((filter.rarity.toLocaleLowerCase() !== 'all') &&
-        (filter.searchTerm === undefined || filter.searchTerm.length === 0)) {
-        return `${this._cardsApi}?search=rarity eq ${filter.rarity}`;
-      }
+        if ((filter.rarity.toLocaleLowerCase() !== 'all') &&
+          (filter.searchTerm === undefined || filter.searchTerm.length === 0)) {
+          return `${this._cardsApi}?search=rarity eq ${filter.rarity}`;
+        }
 
-      if (filter.rarity.toLocaleLowerCase() === 'all' &&
-        filter.searchTerm.length > 0) {
-        return `${this._cardsApi}?search=name co ${filter.searchTerm}`;
-      }
+        if (filter.rarity.toLocaleLowerCase() === 'all' &&
+          filter.searchTerm.length > 0) {
+          return `${this._cardsApi}?search=name co ${filter.searchTerm}`;
+        }
 
-      if (filter.rarity.toLocaleLowerCase() !== 'all' &&
-        filter.searchTerm.length > 0) {
-        return `${this._cardsApi}?search=rarity eq ${filter.rarity}&search=name co ${filter.searchTerm}`;
-      }
-    }),
-    debounceTime(300),
-    distinctUntilChanged(),
-    switchMap(filter => this._http.get<PagedResults<Card>>(filter)
-      .pipe(
-        map(cards =>
-          cards.items.map(card => ({
-            ...card,
-            imageUrl: `${this._cardImageApi}/${card.idName}.png`
-          }) as Card)
+        if (filter.rarity.toLocaleLowerCase() !== 'all' &&
+          filter.searchTerm.length > 0) {
+          return `${this._cardsApi}?search=rarity eq ${filter.rarity}&search=name co ${filter.searchTerm}`;
+        }
+      }),
+      debounceTime(1000),
+      distinctUntilChanged(),
+      tap(() => this._spinner.show()),
+      switchMap(apiUrl => this._http.get<PagedResults<Card>>(apiUrl)
+        .pipe(
+          map(cards => ({
+            ...cards,
+            items: cards.items.map(card => ({
+              ...card,
+              imageUrl: `${this._cardImageApi}/${card.idName}.png`
+            }))
+          }) as PagedResults<Card>)
         )
-      )
-    ),
-    shareReplay(1),
-    tap(() => this._spinner.hide()),
-    catchError(err => {
-      this.errorMessageSubject.next(err);
-      return EMPTY;
-    })
-  );
+      ),
+      shareReplay(1),
+      tap(() => this._spinner.hide()),
+      catchError(err => {
+        this.errorMessageSubject.next(err);
+        return EMPTY;
+      })
+    );
 
   onSearch(filter: SearchTermCardFilter) {
     this.searchFilterSubject.next(filter);
