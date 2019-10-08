@@ -55,8 +55,6 @@ namespace ClashRoyaleApi.Controllers
         [ProducesResponseType(404)]
         public async Task<ActionResult<Card>> GetCardById(int cardId)
         {
-            var usr = User;
-
             Card card = await _cardService.GetCardByIdAsync(cardId);
 
             if (card == null)
@@ -74,12 +72,10 @@ namespace ClashRoyaleApi.Controllers
         {
             await _cardService.CreateCardAsync(cardEntity);
 
-            //var location = _linkGenerator.GetUriByAction(nameof(GetCardById), "Cards",
-            //                                                new { id = cardEntity.Id },
-            //                                                HttpContext.Request.Scheme,
-            //                                                HttpContext.Request.Host);
-
-            var location = "https://localhost:5001";
+            var location = _linkGenerator.GetUriByAction(HttpContext,
+                                "GetCardById",
+                                "Cards",
+                                values: new { cardId = cardEntity.Id });
 
             return Created(location, cardEntity);
         }
