@@ -1,4 +1,4 @@
-<div class="container mt-5">
+<div class="container mt-2">
   <div class="card-detail">
     <div class="card-detail-container">
       <h2 class="text-primary">
@@ -23,8 +23,8 @@
 
       <ng-container *ngIf="vm$ | async as vm">
         <div class="container mb-5">
-          <h3 class="card-detail-title">Troops <span class="badge badge-danger">{{vm.cardsTroop.length}}</span>
-          </h3>
+          <div class="card-detail-title">Troops <span class="badge badge-danger">{{vm.cardsTroop.length}}</span>
+          </div>
           <hr>
           <div class="row no-gutters">
             <div class="col-md-1 col-4 hover-effect" *ngFor='let card of vm.cardsTroop'>
@@ -39,8 +39,8 @@
         </div>
 
         <div class="container mb-5">
-          <h3 class="card-detail-title">Spells <span class="badge badge-danger">{{vm.cardsSpell.length}}</span>
-          </h3>
+          <div class="card-detail-title">Spells <span class="badge badge-danger">{{vm.cardsSpell.length}}</span>
+          </div>
           <hr>
           <div class="row no-gutters">
             <div class="col-md-1 col-4 hover-effect" *ngFor='let card of vm.cardsSpell'>
@@ -55,8 +55,8 @@
         </div>
 
         <div class="container mb-5">
-          <h3 class="card-detail-title">Buildings <span class="badge badge-danger">{{vm.cardsBuilding.length}}</span>
-          </h3>
+          <div class="card-detail-title">Buildings <span class="badge badge-danger">{{vm.cardsBuilding.length}}</span>
+          </div>
           <hr>
           <div class="row no-gutters">
             <div class="col-md-1 col-4 hover-effect" *ngFor='let card of vm.cardsBuilding'>

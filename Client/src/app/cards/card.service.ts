@@ -38,7 +38,9 @@ export class CardService {
           ...card,
           imageUrl: `${this._cardImageApi}/${card.idName}.png`
         }))
-      }) as PagedResults<Card>)
+      }) as PagedResults<Card>),
+      shareReplay(1),
+      catchError(err => this.handleError(err))
     )
 
   /**
@@ -54,11 +56,11 @@ export class CardService {
             map(card => ({
               ...card,
               imageUrl: `${this._cardImageApi}/${card.idName}.png`
-            }) as Card)
+            }) as Card),
+            catchError(err => this.handleError(err))
           )
       ),
-      tap(() => this._spinner.hide()),
-      catchError(this.handleError)
+      tap(() => this._spinner.hide())
     );
 
   onSelectedCardId(id: number) {
@@ -117,8 +119,9 @@ export class CardService {
             items: cards.items.map(card => ({
               ...card,
               imageUrl: `${this._cardImageApi}/${card.idName}.png`
-            }))
-          }) as PagedResults<Card>)
+            }) as Card)
+          }) as PagedResults<Card>),
+          catchError(err => this.handleError(err))
         )
       ),
       shareReplay(1),

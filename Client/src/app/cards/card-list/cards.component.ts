@@ -3,7 +3,7 @@ import { NgbModal, NgbActiveModal, NgbTypeaheadConfig, NgbTypeahead } from '@ng-
 
 import { CardService } from '../card.service';
 import { Card, SearchTermCardFilter } from '../card';
-import { map, catchError, debounceTime, switchMap, tap, distinctUntilChanged, merge, filter } from 'rxjs/operators';
+import { map, catchError, debounceTime, switchMap, distinctUntilChanged, merge, filter } from 'rxjs/operators';
 import { combineLatest, BehaviorSubject, Observable, Subject, EMPTY } from 'rxjs';
 
 @Component({
