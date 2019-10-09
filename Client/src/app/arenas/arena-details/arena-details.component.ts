@@ -1,61 +1,69 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Arena } from '../arena';
 import { ArenaService } from '../arena.service';
-import { Card } from '../../cards/card';
+import { map, mergeMap, catchError } from 'rxjs/operators';
+import { combineLatest, EMPTY } from 'rxjs';
 
 @Component({
   templateUrl: './arena-details.component.html',
   styleUrls: ['./arena-details.component.scss']
 })
-export class ArenaDetailsComponent implements OnInit {
+export class ArenaDetailsComponent {
   pageTitle = 'Arena Details';
-  errorMessage: string;
-  selectedArena: Arena;
-  selectedArenaCardUnlocks: Card[];
-  selectedArenaChestUnlocks: Chest[];
-  cards: Card[];
 
   constructor(private _route: ActivatedRoute,
     private _router: Router,
     private _arenaService: ArenaService) { }
 
-  ngOnInit() {
-    this._route.data.subscribe(data => {
-      this.selectedArena = data['resolvedArenaData'];
+  arena$ = this._route.params
+    .pipe(
+      map(params => params['id']),
+      mergeMap(this._arenaService.arena$),
+      catchError(err => this.handleError(err))
+    )
 
-      this.getArenaCardUnlocks();
-      this.getArenaChestUnlockes();
-    });
+  arenaCardsUnlock$ = this._route.params
+    .pipe(
+      map(params => params['id']),
+      mergeMap(this._arenaService.arenaCardsUnlock$),
+      catchError(err => this.handleError(err))
+    )
 
-    // const param = this._route.snapshot.paramMap.get('id');
+  arenaChestsUnlock$ = this._route.params
+    .pipe(
+      map(params => params['id']),
+      mergeMap(this._arenaService.arenaChestsUnlock$),
+      catchError(err => this.handleError(err))
+    )
 
-    // if (param) {
-    //   const id = param;
-    //   this.getArenaById(id);
-    // }
-  }
+  vm$ = combineLatest([this.arena$, this.arenaCardsUnlock$, this.arenaChestsUnlock$])
+    .pipe(
+      map(([arena, arenaCardsUnlock, arenaChestsUnlock]) =>
+        ({ arena, arenaCardsUnlock, arenaChestsUnlock })
+      ),
+      catchError(err => this.handleError(err))
+    )
 
-  /**
-   * Local method to retrieve all the cards that can be unlocked in the selected arena
-   */
-  getArenaCardUnlocks(): void {
-    this._arenaService.getUnlockCardsByArenaId(this.selectedArena.id).subscribe(data => {
-      this.selectedArenaCardUnlocks = data;
-    });
-  }
+  private handleError(err: any) {
+    // in a real world app, we may send the server to some remote logging infrastructure
+    // instead of just logging it to the console
+    let errorMessage: string;
+    if (err.error instanceof ErrorEvent) {
+      // A client-side or network error occurred. Handle it accordingly.
+      errorMessage = `An error occurred: ${err.error.message}`;
+    } else {
+      // The backend returned an unsuccessful response code.
+      // The response body may contain clues as to what went wrong,
+      errorMessage = `Backend returned code ${err.status}: ${err.error}`;
+    }
 
-  /**
-   * Local method to retrieve all the chests that can be unlocked in the selected arena
-   */
-  getArenaChestUnlockes(): void {
-    this._arenaService.getUnlockChestsByArenaId(this.selectedArena.id).subscribe(data => {
-      this.selectedArenaChestUnlocks = data;
-    });
+    console.error(`CardsComponent: ${errorMessage}`);
+
+    return EMPTY;
+    // return throwError(errorMessage);
   }
 
   onBack(): void {
     this._router.navigate(['/arenas']);
   }
-
 }

@@ -1,5 +1,5 @@
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
-import { Observable } from "rxjs";
+import { Observable, BehaviorSubject } from "rxjs";
 
 import { Arena } from "../arena";
 import { ArenaService } from "../arena.service";
@@ -14,7 +14,11 @@ export class ArenaDetailsResolver implements Resolve<Arena> {
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Arena | Observable<Arena> | Promise<Arena> {
         const id = +route.paramMap.get('id');
-        return this.arenaService.getArenaById(id);
+
+        // TODO update this to return a single Arena
+        this.arenaService.arena$;
+
+        return null;
     }
 
 }

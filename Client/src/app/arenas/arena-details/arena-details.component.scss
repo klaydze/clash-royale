@@ -27,3 +27,33 @@ $titleBackgroundColor: whitesmoke;
 img {
   border-radius: 5px 5px 0 0;
 }
+
+.img-thumbnail {
+  border: none;
+}
+
+/* Hover Zoom Effect */
+figure {
+  margin: 0;
+  padding: 0;
+  background: #fff;
+  overflow: hidden;
+}
+
+figure:hover + span {
+  bottom: -36px;
+  opacity: 1;
+}
+
+.hover-effect figure img {
+  -webkit-transform: scale(1);
+  transform: scale(1);
+  -webkit-transition: 0.2s ease-in-out;
+  transition: 0.2s ease-in-out;
+}
+
+.hover-effect figure:hover img {
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
+}
+/* Hover Zoom Effect */

@@ -1,44 +1,41 @@
-<div class="container mt-5">
-    <div class="card text-center">
-        <img class="img-fluid mx-auto d-block" [src]='selectedArena.imageUrl' [title]='selectedArena.name'
-            [alt]='selectedArena.name' />
-        <div class="card-body">
-            <!--Start card body-->
-            <h3 class="card-title">{{selectedArena.name}}</h3>
+<div class="container mt-2">
+    <ng-container *ngIf="vm$ | async as vm">
+        <div class="card-detail text-center">
+            <img class="img-fluid mx-auto d-block" [src]='vm?.arena?.imageUrl' [title]='vm?.arena?.name'
+                [alt]='vm?.arena?.name' />
+            <div class="card-detail-container">
+                <!--Start card body-->
+                <h2 class="card-title">{{vm?.arena?.name}}</h2>
 
-            <div class="container mt-5">
-                <div *ngIf='selectedArenaCardUnlocks?.length > 0' class="card">
-                    <div class="card-header">
-                        <h6>List of cards that can be unlocked</h6>
+                <div class="container mt-5">
+                    <div class="card-detail-title">Cards Unlock</div>
+                    <hr>
+                    <div class="row no-gutters">
+                        <div class="col-md-1 col-4 hover-effect" *ngFor="let card of vm.arenaCardsUnlock">
+                            <a class="d-block mb-1">
+                                <figure>
+                                    <img class="img-fluid img-thumbnail" [src]='card.imageUrl' [title]='card.name'
+                                        [alt]='card.name' [routerLink]="['/cards', card.id]" />
+                                </figure>
+                            </a>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div *ngFor='let card of selectedArenaCardUnlocks'>
-                                <div class="mr-1 mb-1">
-                                    <img width="50px" height="50px" [src]='card.imageUrl' [title]='card.name' />
-                                </div>
-                            </div>
+
+                    <div class="card-detail-title">Chests Unlock</div>
+                    <hr>
+                    <div class="row no-gutters">
+                        <div class="col-md-1 col-4 hover-effect" *ngFor="let chest of vm.arenaChestsUnlock">
+                            <a class="d-block mb-1">
+                                <figure>
+                                    <img class="img-fluid img-thumbnail" [src]='chest.imageUrl' [title]='chest.name'
+                                        [alt]='chest.name' />
+                                </figure>
+                            </a>
                         </div>
                     </div>
                 </div>
-
-                <div *ngIf='selectedArenaChestUnlocks?.length > 0' class="card">
-                    <div class="card-header">
-                        <h6>List of chests that can be unlocked</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div *ngFor='let chest of selectedArenaChestUnlocks'>
-                                <div class="mr-1 mb-1">
-                                    <img width="50px" height="50px" [src]='chest.imageUrl' [title]='chest.name' />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <!--End card body-->
             </div>
-
-            <!--End card body-->
         </div>
-    </div>
+    </ng-container>
 </div>
