@@ -12,3 +12,5 @@ ClashRoyaleApi/ClashRoyaleApi.Sts/obj
 ClashRoyaleApi/ClashRoyaleApi.Sts/Properties
 appsettings.Production.json
 .vs/
+Client/.firebase
+Client/src/environments/environment.prod.ts
