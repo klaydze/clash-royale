@@ -1,23 +1,25 @@
-<div class="container mt-5">
-  <div class="card-detail">
-    <div class="card-detail-container">
-      <h2 class="text-primary">
-        {{pageTitle}}
-      </h2>
-      <hr>
-      <div class="row">
-        <div class="col-md-3 col-sm-4 col-xs-12 mb-4" *ngFor='let arena of filteredArenas'>
-          <div class="text-center hovereffect">
-            <img class="card-img-top" [src]='arena.imageUrl' [title]='arena.name' [alt]='arena.name' width="120px"
-              height="200px" />
-            <div class="overlay">
-              <h2>{{arena.name}}</h2>
-              <a class="info" [routerLink]="['/arenas', arena.id]">Show details</a>
+<div class="container mt-2">
+    <div class="card-detail">
+        <div class="card-detail-container">
+            <h2 class="text-primary">
+                {{pageTitle}}
+            </h2>
+            <hr>
+            <div class="row" *ngIf="arenas$ | async as vm">
+                <div class="col-md-3 col-sm-4 col-xs-12 mb-4" *ngFor='let arena of vm.items'>
+                    <div class="text-center hovereffect">
+                        <img class="card-img-top" [src]='arena.imageUrl' [title]='arena.name' [alt]='arena.name' width="120px"
+                             height="200px" />
+                        <div class="overlay">
+                            <h2>{{arena.name}}</h2>
+                            <a class="info" [routerLink]="['/arenas', arena.id]">Show details</a>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
 </div>
-<ngx-spinner type="ball-clip-rotate-pulse"><p style="color: white" > Loading... </p></ngx-spinner>
+<ngx-spinner type="ball-clip-rotate-pulse">
+    <p style="color: white"> Loading list of arenas... </p>
+</ngx-spinner>
