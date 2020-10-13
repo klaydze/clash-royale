@@ -7,7 +7,7 @@ Lousily developed and maintained by **Jessie Semana** using Angular 8 and ASP.Ne
 - Bootstrap 4.x
 
 #### Server
-- ASP.Net Core 2.2
+- ASP.Net Core 3.1
 - Entity Framework Core
 
 ## Endpoints
