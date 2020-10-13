@@ -7,9 +7,9 @@ namespace ClashRoyaleApi.Infrastructure.Filters
 {
     public class ApiExceptionFilter : IExceptionFilter
     {
-        private readonly IHostingEnvironment _env;
+        private readonly IWebHostEnvironment _env;
 
-        public ApiExceptionFilter(IHostingEnvironment env)
+        public ApiExceptionFilter(IWebHostEnvironment env)
         {
             _env = env;
         }
@@ -18,7 +18,7 @@ namespace ClashRoyaleApi.Infrastructure.Filters
         {
             var error = new ApiError();
 
-            if (_env.IsDevelopment())
+            if (_env.EnvironmentName == "Development")
             {
                 error.Message = context.Exception.Message;
                 error.Detail = context.Exception.StackTrace;
