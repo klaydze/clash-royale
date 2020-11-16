@@ -1,5 +1,5 @@
 # Clash Royale
-Lousily developed and maintained by **Jessie Semana** using Angular 8 and ASP.Net Core 2.2 as backend (Web API).
+Lousily developed and maintained by **Jessie Semana** using Angular 8 and ASP.Net Core 3.1 as backend (Web API).
 
 ## Development
 #### Client
